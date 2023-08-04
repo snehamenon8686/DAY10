@@ -1,0 +1,148 @@
+1. CREATE A PROGRAM TO GIVE DIFFERENT COLOURS TO DIFFERENT DEPARTMENTS USINGSUBFILE AND RPGE FILE
+
+ Columns . . . :    6  76            Edit                      TEN22LIB/TRNGSR
+ SEU==>                                                                 SFLCLR
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords++++++++++++++++++++++++
+        *************** Beginning of data ************************************
+0001.00 FEMPLOYEE  IF   E           K DISK                                    
+0002.00 FSFLCLRD   CF   E             WORKSTN SFILE(EMPSFL:RRN)               
+0003.00 DRRN              S              3P 0 INZ(0)                          
+0004.00 C                   EVAL      *IN73=*ON                               
+0005.00 C                   WRITE     EMPCTL                                  
+0006.00 C                   EVAL      RRN=0                                   
+0007.00 C                   EVAL      *IN73=*OFF                              
+0008.00 C     *LOVAL        SETLL     EMPREC                                  
+0009.00 C                   READ      EMPREC                                  
+0010.00 C                   DOW       NOT %EOF                                
+0011.00 C                   MOVEA     '0000'        *IN(41)                   
+0012.00 C                   SELECT                                            
+0013.00 C                   WHEN      DEPT=10                                 
+0014.00 C                   EVAL      *IN41=*ON                               
+0015.00 C                   WHEN      DEPT=20                                 
+0016.00 C                   EVAL      *IN42=*ON                               
+0017.00 C                   WHEN      DEPT=30                           
+0018.00 C                   EVAL      *IN43=*ON                         
+0019.00 C                   WHEN      DEPT=40                           
+0020.00 C                   EVAL      *IN44=*ON                         
+0021.00 C                   ENDSL                                       
+0022.00 C                   EVAL      RRN+=1                            
+0023.00 C                   WRITE     EMPSFL                            
+0024.00 C                   READ      EMPREC                            
+0025.00 C                   ENDDO                                       
+0026.00 C                   EVAL      *IN71=*ON                                 
+0027.00 C                   EVAL      *IN72=*ON                                 
+0028.00 C                   DOW       NOT *IN03                                 
+0029.00 C                   WRITE     FOOTER                                    
+0030.00 C                   EXFMT     EMPCTL                                    
+0031.00 C                   ENDDO                                               
+0032.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+2.WAP TO FIND ODD OR EVEN USING FUNTION REM
+
+ Columns . . . :    6  76            Edit                      TEN22LIB/TRNGSRC 
+ SEU==>                                                                ODDEVENR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FODDEVEND  CF   E             WORKSTN                                   
+0002.00 C                   DOW       *IN03=*OFF                                
+0003.00 C                   EXFMT     SCR                                       
+0004.00 C   03              LEAVE                                               
+0005.00 C                   IF        %REM(NUM:2)=1                             
+0006.00 C                   EVAL      RESULT='ODD'                              
+0007.00 C                   ELSE                                                
+0008.00 C                   EVAL      RESULT='EVEN'                             
+0009.00 C                   ENDIF                                               
+0010.00 C                   ENDDO                                               
+0011.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+3.WAP TO TRY OUT TRIM FUNCTION
+
+ Columns . . . :    6  76            Edit                      TEN22LIB/TRNGSRC 
+ SEU==>                                                                   TRIMR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FTRIMD     CF   E             WORKSTN                                   
+0002.00 C                   DOW       *IN03=*OFF                                
+0003.00 C                   EXFMT     SCR                                       
+0004.00 C                   EVAL      MSG=%TRIM(NAME)+' '+%TRIM(ST)+' '+%TRIM(C 
+0005.00 C                   ENDDO                                               
+0006.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                
+4.WAP TO SEARCH A PARTICULAR USER TO GET BANK DETAILS USING READC AND WINDOW SUBFILE
+
+ Columns . . . :    6  76            Edit                      TEN22LIB/TRNGSRC
+ SEU==>                                                                   TRANR
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.00 FBANKMAST  UF   E           K DISK                                     
+0002.00 FBANKTRAN  O    E           K DISK                                     
+0003.00 FTRAND     CF   E             WORKSTN SFILE(MSTSFL:RRN)                
+0004.00 DRRN              S              3P 0 INZ(*ZEROS)                      
+0005.00 DNEWBAL           S             12P 2 INZ(*ZEROS)                      
+0006.00 C                   EXSR      FILLSFL                                  
+0007.00 C                   DOW       NOT *IN03                                
+0008.00 C                   WRITE     HEADER                                   
+0009.00 C                   WRITE     FOOTER                                   
+0010.00 C                   EXFMT     TRNENT                                   
+0011.00 C   03              LEAVE                                              
+0012.00 C   01              EXSR      SHOWSFL                                  
+0013.00 C     ACNO          CHAIN     MSTREC                                   
+0014.00 C                   IF        NOT %FOUND                               
+0015.00 C                   EVAL      MSG='INVALID A/C NO.'                    
+0016.00 C                   ITER                                               
+0017.00 C                   ENDIF                                               
+0018.00 C                   IF        TRNTYPE='CR'                              
+0019.00 C                   EVAL      NEWBAL=BALANCE+TRNAMT                     
+0020.00 C                   ENDIF                                               
+0021.00 C                   IF        TRNTYPE='DR'                              
+0022.00 C                   EVAL      NEWBAL=BALANCE-TRNAMT                     
+0023.00 C                   ENDIF                                               
+0024.00 C                   IF        *IN04                                     
+0025.00 C* SAVE TRANSACTION...........>                                         
+                                                                                
+0026.00 C                   IF        TRNTYPE='DR' AND NEWBAL<0                 
+0027.00 C                   EVAL      MSG='INSUFFICIENT BALANCE'                
+0028.00 c                   ITER                                                
+0029.00 C                   ENDIF                                               
+0030.00 C                   EVAL      BALANCE=NEWBAL                            
+0031.00 C                   WRITE     TRNREC                                    
+0032.00 C                   UPDATE    MSTREC                                    
+0033.00 C                   CLEAR                   TRNENT                      
+0034.00 C                   ENDIF                                               
+0035.00 C                   IF        *IN12                                     
+0036.00 C                   CLEAR                   TRNENT                      
+0037.00 C                   ENDIF                                               
+0038.00 C                   ENDDO                                               
+0039.00 C                   EVAL      *INLR=*ON                                 
+0040.00 C     FILLSFL       BEGSR                                               
+0041.00 C                   EVAL      *IN73=*ON                                 
+0042.00 C                   WRITE     MSTCTL                                    
+0043.00 C                   EVAL      RRN=0                                     
+0044.00 C     *LOVAL        SETLL     MSTREC                                    
+0045.00 C                   READ      MSTREC                                    
+0046.00 C                   DOW       NOT %EOF                                  
+0047.00 C                   EVAL      OPT=*BLANK                                
+0048.00 C                   EVAL      RRN+=1                                    
+0049.00 C                   WRITE     MSTSFL                                    
+0050.00 C                   READ      MSTREC                                    
+0051.00 C                   ENDDO                                               
+0052.00 C                   MOVEA     '010'         *IN(71)                     
+0053.00 C                   IF        RRN>0                                     
+0054.00 C                   MOVEA     '110'         *IN(71)                     
+0055.00 C                   ENDIF                                               
+0056.00 C                   ENDSR                                               
+0057.00 C     SHOWSFL       BEGSR                                               
+0058.00 C                   EXFMT     MSTCTL                                    
+0059.00 C* EXECUTE/DISPLAY THE MASTER A/C LIST                                  
+0060.00 C* READC READS THAT RECORD FROM SFL WHICH WAS CHANGED DURING EXFMT      
+0061.00 C                   READC     MSTSFL                                    
+                                                                                
+0062.00 C                   IF        NOT %EOF                                  
+0063.00 C                   EVAL      OPT=*BLANK                                
+0064.00 C                   UPDATE    MSTSFL                                    
+0065.00 C                   ENDIF                                               
+0066.00 C                   ENDSR                                               
+        ****************** End of data **************************************** 
